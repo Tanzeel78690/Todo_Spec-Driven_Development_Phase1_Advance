@@ -1,18 +1,3 @@
-# Full-Stack Todo Application (Phase II)
-
-This repository contains the Phase II implementation of a Todo application, evolving from an in-memory console app to a secure, multi-user full-stack web application. It features persistent storage, user authentication, and a RESTful API, enabling users to manage their personal todo lists through a modern web interface.
-
-## Technology Stack
-
-*   **Frontend**: Next.js 16+ (App Router), TypeScript, Tailwind CSS
-*   **Backend**: Python FastAPI
-*   **Database**: Neon Serverless PostgreSQL
-*   **ORM**: SQLModel
-*   **Authentication**: Better Auth (JWT-based)
-*   **Development Workflow**: Spec-driven, agentic development with Spec-Kit Plus
-
----
-
 # Quickstart Guide: Full-Stack Todo App
 
 This guide provides instructions for quickly setting up and running the Full-Stack Todo Application locally.

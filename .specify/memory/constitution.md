@@ -1,55 +1,158 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+
+- Version change: none -> 1.0.0
+- List of modified principles:
+  - Added: Spec-Driven Development
+  - Added: Process over Manual Coding
+  - Added: Clarity & Simplicity
+  - Added: Reproducibility
+  - Added: Clean Code Discipline
+- Added sections:
+  - Key Standards and Constraints
+  - Project Definition
+  - Scope
+  - Success Criteria
+- Removed sections:
+  - None
+- Templates requiring updates:
+  - ⚠ pending: .specify/templates/plan-template.md
+  - ⚠ pending: .specify/templates/spec-template.md
+  - ⚠ pending: .specify/templates/tasks-template.md
+- Follow-up TODOs:
+  - TODO(RATIFICATION_DATE): Set initial ratification date.
+-->
+
+# Todo Application (Agentic, Spec-Driven) Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Spec-Driven Development
+All implementation must strictly follow specifications generated through Spec-Kit Plus and executed via approved agentic workflows.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Process over Manual Coding
+No manual coding is permitted. All code must be generated through Claude Code or Gemini using the Agentic Dev Stack workflow to ensure consistency and traceability.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Phase-Based Evolution
+The project must evolve in clearly defined phases. Each phase builds upon the previous phase without breaking traceability, governance, or specifications.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Clarity & Simplicity
+Code and structure must be easily understandable to beginner–intermediate developers. Simplicity is valued over unnecessary complexity.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Reproducibility
+Any reviewer must be able to clone the repository, follow the README instructions precisely, and run the application successfully in the specified environment.
 
-### [PRINCIPLE_6_NAME]
+### VI. Clean Code Discipline
+Maintain a readable, logical structure, use meaningful naming conventions, create modular functions, and enforce a clear separation of concerns across layers.
 
+---
 
-[PRINCIPLE__DESCRIPTION]
+## Key Standards and Constraints
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+- **Traceability**: All features must be traceable to explicit specifications.
+- **Documentation**: Each development phase (spec → plan → tasks → implementation) must be fully documented in the repository.
+- **Code Style**: Python code must adhere to clean-code practices and PEP-8 guidelines; frontend code must follow idiomatic Next.js and TypeScript conventions.
+- **Spec Authority**: Specifications override implementation assumptions.
+- **No Feature Drift**: Undocumented features are not permitted.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+---
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Project Phases
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### Phase I: In-Memory Python Console Application
+A single-user command-line todo application with in-memory storage only.
+
+### Phase II: Full-Stack Web Application
+A multi-user, authenticated web-based todo application with persistent storage and RESTful APIs.
+
+---
+
+## Phase I Definition
+
+### Objective
+Build a command-line todo application that stores tasks in memory using spec-driven, agentic workflows only.
+
+### Tech Stack
+- **Language**: Python 3.13+
+- **Package Manager**: UV
+- **Development Tools**: Claude Code / Gemini, Spec-Kit Plus
+- **Runtime**: WSL 2 (Ubuntu 22.04)
+
+### Scope
+
+#### In Scope (Mandatory Features)
+1. Add task with title and description
+2. View all tasks
+3. Update task by ID
+4. Delete task by ID
+5. Mark task complete / incomplete
+
+#### Out of Scope
+- File or database persistence
+- Graphical or web interface
+- Authentication or user accounts
+- Advanced task metadata
+
+---
+
+## Phase II Definition
+
+### Objective
+Transform the console application into a modern, multi-user web application with authentication and persistent storage.
+
+### Technology Stack
+- **Frontend**: Next.js 16+ (App Router), TypeScript, Tailwind CSS
+- **Backend**: Python FastAPI
+- **ORM**: SQLModel
+- **Database**: Neon Serverless PostgreSQL
+- **Authentication**: Better Auth (JWT-based)
+- **Spec-Driven Tools**: Claude Code / Gemini, Spec-Kit Plus
+
+---
+
+## API Standards (Phase II)
+
+- RESTful endpoints under `/api/*`
+- All endpoints require a valid JWT token
+- User identity must be verified on every request
+- Each user may only access their own tasks
+- Proper HTTP status codes must be returned
+
+---
+
+## Repository Structure
+
+- **/specs**: Organized specifications (features, api, database, ui)
+- **/frontend**: Next.js application
+- **/backend**: FastAPI application
+- **/specs_history**: Archived specification iterations
+- **README.md**: Setup and usage instructions
+- **CLAUDE.md**: Agentic workflow instructions
+- **Constitution**: This file must remain updated
+
+---
+
+## Success Criteria
+
+The project is considered successful if:
+
+- All Phase I and Phase II features work as specified
+- Authentication and user isolation are correctly enforced
+- No manual code edits exist outside agentic workflows
+- All development phases are clearly traceable
+- The application runs successfully in documented environments
+- Codebases remain clean, readable, and maintainable
+
+---
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+- **Supremacy**: This Constitution supersedes all other practices and ad-hoc decisions.
+- **Compliance**: All development activities must comply with this Constitution.
+- **Amendments**: Any amendment requires documentation and a clear migration path.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+---
+
+**Version**: 2.0.0  
+**Ratified**: TODO  
+**Last Amended**: 2025-12-25

@@ -1,0 +1,6 @@
+fastapi
+sqlmodel
+uvicorn[standard]
+python-jose[cryptography]
+psycopg2-binary
+passlib[bcrypt]

@@ -1,4 +1,4 @@
-﻿# Gemini CLI Rules
+# Gemini CLI Rules
 
 This file is generated during init for the selected agent.
 
@@ -194,7 +194,7 @@ If ALL true, suggest:
 📋 Architectural decision detected: [brief-description]
    Document reasoning and tradeoffs? Run `/sp.adr [decision-title]`
 
-Wait for consent; never auto-create ADRs. Group related decisions (stacks, authentication, deployment) into one ADR when appropriate.
+Wait for consent; never auto-create ADR. Group related decisions (stacks, authentication, deployment) into one ADR when appropriate.
 
 ## Basic Project Structure
 
