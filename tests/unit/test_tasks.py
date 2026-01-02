@@ -1,125 +1,219 @@
-# In tests/unit/test_tasks.py
+import unittest
+from datetime import datetime, timedelta
+from src.tasks import Task, TaskManager
 
-# First, clear the content of the file to avoid conflicts
-# Then, add the new content
+class TestTaskManager(unittest.TestCase):
+    def setUp(self):
+        self.task_manager = TaskManager()
 
-import pytest
-from src import tasks
+    def test_add_task(self):
+        task = self.task_manager.add_task("Test Task", "Description for test task")
+        self.assertIsInstance(task, Task)
+        self.assertEqual(task.id, 1)
+        self.assertEqual(task.title, "Test Task")
+        self.assertEqual(task.description, "Description for test task")
+        self.assertFalse(task.completed)
+        self.assertEqual(len(self.task_manager.tasks), 1)
 
-# A fixture to ensure each test starts with a clean slate
-@pytest.fixture(autouse=True)
-def clean_tasks():
-    tasks._tasks = []
-    tasks._next_id = 1
+    def test_get_all_tasks(self):
+        self.task_manager.add_task("Task 1")
+        self.task_manager.add_task("Task 2")
+        tasks = self.task_manager.get_all_tasks()
+        self.assertEqual(len(tasks), 2)
+        self.assertEqual(tasks[0].title, "Task 1")
+        self.assertEqual(tasks[1].title, "Task 2")
 
-def test_add_task():
-    """
-    Tests that a task can be added and it has the correct attributes.
-    """
-    task = tasks.add_task("Test Title", "Test Description")
-    assert task.id == 1
-    assert task.title == "Test Title"
-    assert task.description == "Test Description"
-    assert task.status == "incomplete"
-    assert len(tasks._tasks) == 1
-    assert tasks._tasks[0] == task
+    def test_update_task(self):
+        self.task_manager.add_task("Task to Update")
+        updated = self.task_manager.update_task(1, "Updated Title", "Updated Description")
+        self.assertTrue(updated)
+        task = self.task_manager.tasks[1]
+        self.assertEqual(task.title, "Updated Title")
+        self.assertEqual(task.description, "Updated Description")
 
-def test_get_all_tasks():
-    """
-    Tests that all added tasks can be retrieved.
-    """
-    task1 = tasks.add_task("First", "First Desc")
-    task2 = tasks.add_task("Second", "Second Desc")
-    
-    all_tasks = tasks.get_all_tasks()
-    
-    assert len(all_tasks) == 2
-    assert task1 in all_tasks
-    assert task2 in all_tasks
+        updated_title_only = self.task_manager.update_task(1, title="New Title Only")
+        self.assertTrue(updated_title_only)
+        task = self.task_manager.tasks[1]
+        self.assertEqual(task.title, "New Title Only")
+        self.assertEqual(task.description, "Updated Description") # Description should remain unchanged
 
-def test_toggle_task_status():
-    """
-    Tests that a task's status can be toggled.
-    """
-    task = tasks.add_task("Toggle Test", "")
-    assert task.status == "incomplete"
-    
-    # Toggle to complete
-    updated_task = tasks.toggle_task_status(task.id)
-    assert updated_task.status == "complete"
-    
-    # Toggle back to incomplete
-    updated_task_again = tasks.toggle_task_status(task.id)
-    assert updated_task_again.status == "incomplete"
+        updated_description_only = self.task_manager.update_task(1, description="New Description Only")
+        self.assertTrue(updated_description_only)
+        task = self.task_manager.tasks[1]
+        self.assertEqual(task.title, "New Title Only") # Title should remain unchanged
+        self.assertEqual(task.description, "New Description Only")
 
-def test_toggle_nonexistent_task():
-    """
-    Tests that toggling a non-existent task returns None.
-    """
-    assert tasks.toggle_task_status(999) is None
+        not_found = self.task_manager.update_task(99, "Non Existent")
+        self.assertFalse(not_found)
 
-def test_update_task():
-    """
-    Tests that a task's title and description can be updated.
-    """
-    task = tasks.add_task("Original Title", "Original Desc")
-    
-    updated_task = tasks.update_task(task.id, "New Title", "New Desc")
-    assert updated_task.title == "New Title"
-    assert updated_task.description == "New Desc"
-    
-    # Test updating only title
-    updated_task_2 = tasks.update_task(task.id, "Second New Title", None)
-    assert updated_task_2.title == "Second New Title"
-    assert updated_task_2.description == "New Desc" # Description should remain from previous update
-    
-    # Test updating only description
-    updated_task_3 = tasks.update_task(task.id, None, "Second New Desc")
-    assert updated_task_3.title == "Second New Title" # Title should remain
-    assert updated_task_3.description == "Second New Desc"
+    def test_delete_task(self):
+        self.task_manager.add_task("Task to Delete")
+        deleted = self.task_manager.delete_task(1)
+        self.assertTrue(deleted)
+        self.assertEqual(len(self.task_manager.tasks), 0)
 
-def test_update_nonexistent_task():
-    """
-    Tests that updating a non-existent task returns None.
-    """
-    assert tasks.update_task(999, "title", "desc") is None
+        not_found = self.task_manager.delete_task(99)
+        self.assertFalse(not_found)
 
-def test_delete_task():
-    """
-    Tests that a task can be deleted.
-    """
-    task1 = tasks.add_task("Delete Me", "")
-    task2 = tasks.add_task("Keep Me", "")
-    
-    deleted_task = tasks.delete_task(task1.id)
-    
-    assert deleted_task == task1
-    assert len(tasks._tasks) == 1
-    assert task1 not in tasks._tasks
-    assert task2 in tasks._tasks
+    def test_toggle_task_completion(self):
+        self.task_manager.add_task("Task to Toggle")
+        task = self.task_manager.tasks[1]
+        self.assertFalse(task.completed)
 
-def test_delete_nonexistent_task():
-    """
-    Tests that deleting a non-existent task returns None.
-    """
-    assert tasks.delete_task(999) is None
+        toggled = self.task_manager.toggle_task_completion(1)
+        self.assertTrue(toggled)
+        self.assertTrue(task.completed)
 
-def test_delete_task():
-    """
-    Tests that a task can be deleted.
-    """
-    task1 = tasks.add_task("Delete Me", "")
-    task2 = tasks.add_task("Keep Me", "")
-    
-    deleted_task = tasks.delete_task(task1.id)
-    
-    assert deleted_task == task1
-    assert len(tasks._tasks) == 1
-    assert task1 not in tasks._tasks
-    assert task2 in tasks._tasks
+        toggled_again = self.task_manager.toggle_task_completion(1)
+        self.assertTrue(toggled_again)
+        self.assertFalse(task.completed)
 
-def test_delete_nonexistent_task():
-    """
-    Tests that deleting a non-existent task returns None.
-    """
-    assert tasks.delete_task(999) is None
+        not_found = self.task_manager.toggle_task_completion(99)
+        self.assertFalse(not_found)
+
+    def test_search_tasks(self):
+        self.task_manager.add_task("Buy milk", "Remember to get 2% milk")
+        self.task_manager.add_task("Walk dog", "Take the dog for a walk")
+        self.task_manager.add_task("Clean house", "Vacuum and dust")
+        
+        results = self.task_manager.search_tasks("milk")
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].title, "Buy milk")
+
+        results_case_insensitive = self.task_manager.search_tasks("DOG")
+        self.assertEqual(len(results_case_insensitive), 1)
+        self.assertEqual(results_case_insensitive[0].title, "Walk dog")
+
+        results_no_match = self.task_manager.search_tasks("nonexistent")
+        self.assertEqual(len(results_no_match), 0)
+
+    def test_filter_tasks_by_status(self):
+        task1 = self.task_manager.add_task("Complete task")
+        task2 = self.task_manager.add_task("Incomplete task")
+        self.task_manager.toggle_task_completion(task1.id)
+
+        completed_tasks = self.task_manager.filter_tasks_by_status(True)
+        self.assertEqual(len(completed_tasks), 1)
+        self.assertTrue(completed_tasks[0].completed)
+
+        incomplete_tasks = self.task_manager.filter_tasks_by_status(False)
+        self.assertEqual(len(incomplete_tasks), 1)
+        self.assertFalse(incomplete_tasks[0].completed)
+
+    def test_filter_tasks_by_priority(self):
+        task1 = self.task_manager.add_task("High priority", priority="high")
+        task2 = self.task_manager.add_task("Medium priority", priority="medium")
+        task3 = self.task_manager.add_task("Low priority", priority="low")
+
+        high_priority_tasks = self.task_manager.filter_tasks_by_priority("high")
+        self.assertEqual(len(high_priority_tasks), 1)
+        self.assertEqual(high_priority_tasks[0].priority, "high")
+
+    def test_filter_tasks_by_tag(self):
+        task1 = self.task_manager.add_task("Work task", tags=["work", "urgent"])
+        task2 = self.task_manager.add_task("Home task", tags=["home"])
+        task3 = self.task_manager.add_task("Urgent task", tags=["urgent"])
+
+        work_tasks = self.task_manager.filter_tasks_by_tag("work")
+        self.assertEqual(len(work_tasks), 1)
+        self.assertIn("work", work_tasks[0].tags)
+
+        urgent_tasks = self.task_manager.filter_tasks_by_tag("urgent")
+        self.assertEqual(len(urgent_tasks), 2)
+        self.assertIn("urgent", urgent_tasks[0].tags)
+        self.assertIn("urgent", urgent_tasks[1].tags)
+
+    def test_sort_tasks_by_priority(self):
+        self.task_manager.add_task("Task A", priority="medium")
+        self.task_manager.add_task("Task B", priority="high")
+        self.task_manager.add_task("Task C", priority="low")
+
+        sorted_tasks = self.task_manager.sort_tasks_by_priority()
+        self.assertEqual(len(sorted_tasks), 3)
+        self.assertEqual(sorted_tasks[0].title, "Task B") # High
+        self.assertEqual(sorted_tasks[1].title, "Task A") # Medium
+        self.assertEqual(sorted_tasks[2].title, "Task C") # Low
+
+    def test_sort_tasks_by_title(self):
+        self.task_manager.add_task("Zebra Task")
+        self.task_manager.add_task("Apple Task")
+        self.task_manager.add_task("Banana Task")
+
+        sorted_tasks = self.task_manager.sort_tasks_by_title()
+        self.assertEqual(len(sorted_tasks), 3)
+        self.assertEqual(sorted_tasks[0].title, "Apple Task")
+        self.assertEqual(sorted_tasks[1].title, "Banana Task")
+        self.assertEqual(sorted_tasks[2].title, "Zebra Task")
+
+    def test_add_task_with_due_date_and_recurrence(self):
+        now = datetime.now()
+        task = self.task_manager.add_task("Recurring Task", due_date=now, recurrence="daily")
+        self.assertIsInstance(task, Task)
+        self.assertEqual(task.id, 1)
+        self.assertEqual(task.due_date, now)
+        self.assertEqual(task.recurrence, "daily")
+
+    def test_update_task_due_date_and_recurrence(self):
+        self.task_manager.add_task("Task with Due Date")
+        original_due_date = datetime(2026, 1, 1, 10, 0)
+        new_due_date = datetime(2026, 1, 2, 11, 0)
+        
+        updated = self.task_manager.update_task(1, due_date=new_due_date, recurrence="weekly")
+        self.assertTrue(updated)
+        task = self.task_manager.tasks[1]
+        self.assertEqual(task.due_date, new_due_date)
+        self.assertEqual(task.recurrence, "weekly")
+
+    @patch('src.tasks.datetime') # Mock datetime to control now()
+    def test_toggle_recurring_task_completion_daily(self, mock_datetime):
+        # Set a fixed 'now' for consistent testing
+        fixed_now = datetime(2026, 1, 1, 12, 0)
+        mock_datetime.now.return_value = fixed_now
+        mock_datetime.side_effect = lambda *args, **kw: datetime(*args, **kw) # Allow normal datetime object creation
+        mock_datetime.timedelta = timedelta
+
+        task = self.task_manager.add_task("Daily Task", due_date=fixed_now - timedelta(hours=1), recurrence="daily")
+        task_id = task.id
+        self.assertFalse(task.completed)
+        self.assertEqual(len(self.task_manager.tasks), 1)
+
+        # Mark as complete (should re-create)
+        toggled = self.task_manager.toggle_task_completion(task_id)
+        self.assertTrue(toggled)
+        self.assertEqual(len(self.task_manager.tasks), 1) # Still one task, old one deleted, new one added
+
+        new_task = list(self.task_manager.tasks.values())[0]
+        self.assertNotEqual(new_task.id, task_id)
+        self.assertFalse(new_task.completed)
+        self.assertEqual(new_task.due_date, fixed_now - timedelta(hours=1) + timedelta(days=1))
+        self.assertEqual(new_task.recurrence, "daily")
+
+    @patch('src.tasks.datetime') # Mock datetime to control now()
+    def test_toggle_recurring_task_completion_weekly(self, mock_datetime):
+        fixed_now = datetime(2026, 1, 1, 12, 0)
+        mock_datetime.now.return_value = fixed_now
+        mock_datetime.side_effect = lambda *args, **kw: datetime(*args, **kw)
+        mock_datetime.timedelta = timedelta
+
+        task = self.task_manager.add_task("Weekly Task", due_date=fixed_now - timedelta(hours=1), recurrence="weekly")
+        task_id = task.id
+
+        toggled = self.task_manager.toggle_task_completion(task_id)
+        self.assertTrue(toggled)
+        self.assertEqual(len(self.task_manager.tasks), 1)
+
+        new_task = list(self.task_manager.tasks.values())[0]
+        self.assertEqual(new_task.due_date, fixed_now - timedelta(hours=1) + timedelta(weeks=1))
+        self.assertEqual(new_task.recurrence, "weekly")
+
+    def test_toggle_non_recurring_task_completion(self):
+        task = self.task_manager.add_task("Normal Task")
+        self.assertFalse(task.completed)
+        self.task_manager.toggle_task_completion(task.id)
+        self.assertTrue(task.completed)
+        self.task_manager.toggle_task_completion(task.id)
+        self.assertFalse(task.completed)
+
+
+if __name__ == '__main__':
+    unittest.main()

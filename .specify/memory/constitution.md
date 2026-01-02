@@ -1,158 +1,95 @@
 <!--
-Sync Impact Report:
-
-- Version change: none -> 1.0.0
-- List of modified principles:
-  - Added: Spec-Driven Development
-  - Added: Process over Manual Coding
-  - Added: Clarity & Simplicity
-  - Added: Reproducibility
-  - Added: Clean Code Discipline
-- Added sections:
-  - Key Standards and Constraints
-  - Project Definition
-  - Scope
-  - Success Criteria
-- Removed sections:
-  - None
-- Templates requiring updates:
-  - ⚠ pending: .specify/templates/plan-template.md
-  - ⚠ pending: .specify/templates/spec-template.md
-  - ⚠ pending: .specify/templates/tasks-template.md
-- Follow-up TODOs:
-  - TODO(RATIFICATION_DATE): Set initial ratification date.
+---
+version_change: "1.0.0 → 1.1.0"
+modified_principles:
+  - "Spec-Driven Development → Spec-first development"
+  - "Process over Manual Coding → Incremental feature progression"
+  - "Clarity & Simplicity → Clarity and simplicity for console-based user experience"
+  - "Reproducibility → Maintainability and clean Python architecture"
+  - "Clean Code Discipline → Deterministic behavior"
+added_sections:
+  - "Development standards"
+  - "Feature scope"
+  - "Constraints"
+  - "Documentation & traceability"
+  - "Validation & success criteria"
+removed_sections:
+  - "Key Standards and Constraints"
+  - "Project Definition"
+  - "Scope"
+  - "Success Criteria"
+templates_requiring_updates:
+  - path: ".specify/templates/plan-template.md"
+    status: "✅ updated"
+  - path: ".specify/templates/spec-template.md"
+    status: "✅ updated"
+  - path: ".specify/templates/tasks-template.md"
+    status: "✅ updated"
+  - path: "README.md"
+    status: "⚠ pending"
+todos: []
+---
 -->
+# Spec-driven, agentic development of a CLI-based Todo application using Gemini CLI and SpecKitPlus.
 
-# Todo Application (Agentic, Spec-Driven) Constitution
+## Core principles
 
-## Core Principles
+### I. Spec-first development
+All implementation must strictly follow specifications generated through Spec-Kit Plus and executed via approved agentic workflows. No manual coding is permitted; all code must be generated from specs.
 
-### I. Spec-Driven Development
-All implementation must strictly follow specifications generated through Spec-Kit Plus and executed via approved agentic workflows.
+### II. Incremental feature progression
+Features will be developed in stages, from Basic to Intermediate to Advanced, allowing for iterative development and testing.
 
-### II. Process over Manual Coding
-No manual coding is permitted. All code must be generated through Claude Code or Gemini using the Agentic Dev Stack workflow to ensure consistency and traceability.
+### III. Clarity and simplicity for console-based user experience
+The console interface should be intuitive and easy to use, prioritizing a straightforward user experience.
 
-### III. Phase-Based Evolution
-The project must evolve in clearly defined phases. Each phase builds upon the previous phase without breaking traceability, governance, or specifications.
+### IV. Maintainability and clean Python architecture
+Code should be readable, modular, and follow single-responsibility principles to ensure long-term maintainability.
 
-### IV. Clarity & Simplicity
-Code and structure must be easily understandable to beginner–intermediate developers. Simplicity is valued over unnecessary complexity.
+### V. Deterministic behavior
+The application should have no hidden state and produce predictable outputs for the same inputs.
 
-### V. Reproducibility
-Any reviewer must be able to clone the repository, follow the README instructions precisely, and run the application successfully in the specified environment.
+## Development standards
 
-### VI. Clean Code Discipline
-Maintain a readable, logical structure, use meaningful naming conventions, create modular functions, and enforce a clear separation of concerns across layers.
-
----
-
-## Key Standards and Constraints
-
-- **Traceability**: All features must be traceable to explicit specifications.
-- **Documentation**: Each development phase (spec → plan → tasks → implementation) must be fully documented in the repository.
-- **Code Style**: Python code must adhere to clean-code practices and PEP-8 guidelines; frontend code must follow idiomatic Next.js and TypeScript conventions.
-- **Spec Authority**: Specifications override implementation assumptions.
-- **No Feature Drift**: Undocumented features are not permitted.
-
----
-
-## Project Phases
-
-### Phase I: In-Memory Python Console Application
-A single-user command-line todo application with in-memory storage only.
-
-### Phase II: Full-Stack Web Application
-A multi-user, authenticated web-based todo application with persistent storage and RESTful APIs.
-
----
-
-## Phase I Definition
-
-### Objective
-Build a command-line todo application that stores tasks in memory using spec-driven, agentic workflows only.
-
-### Tech Stack
 - **Language**: Python 3.13+
-- **Package Manager**: UV
-- **Development Tools**: Claude Code / Gemini, Spec-Kit Plus
-- **Runtime**: WSL 2 (Ubuntu 22.04)
+- **Interface**: Command-line (interactive menu-based)
+- **Data storage**: In-memory only (no files, no databases)
+- **Code quality**: Readable, modular, single-responsibility functions
+- **Error handling**: Graceful handling of invalid inputs
 
-### Scope
+## Feature scope
 
-#### In Scope (Mandatory Features)
-1. Add task with title and description
-2. View all tasks
-3. Update task by ID
-4. Delete task by ID
-5. Mark task complete / incomplete
+- **Basic Level**: Add, Delete, Update, View, Mark Complete
+- **Intermediate Level**: Priorities, Tags/Categories, Search, Filter, Sort
+- **Advanced Level**: Recurring Tasks, Due Dates, Time-based Reminders
 
-#### Out of Scope
-- File or database persistence
-- Graphical or web interface
-- Authentication or user accounts
-- Advanced task metadata
+## Constraints
 
----
+- No external dependencies beyond Python standard library
+- No persistence between runs
+- No UI frameworks (CLI only)
+- All features must be toggleable and testable via CLI
 
-## Phase II Definition
+## Documentation & traceability
 
-### Objective
-Transform the console application into a modern, multi-user web application with authentication and persistent storage.
+- Every feature must map back to a specification.
+- Specs must be stored in `specs/`.
+- Code structure must reflect spec structure.
+- `README.md` must explain setup and usage.
+- `GEMINI.md` must document agent instructions.
 
-### Technology Stack
-- **Frontend**: Next.js 16+ (App Router), TypeScript, Tailwind CSS
-- **Backend**: Python FastAPI
-- **ORM**: SQLModel
-- **Database**: Neon Serverless PostgreSQL
-- **Authentication**: Better Auth (JWT-based)
-- **Spec-Driven Tools**: Claude Code / Gemini, Spec-Kit Plus
+## Validation & success criteria
 
----
-
-## API Standards (Phase II)
-
-- RESTful endpoints under `/api/*`
-- All endpoints require a valid JWT token
-- User identity must be verified on every request
-- Each user may only access their own tasks
-- Proper HTTP status codes must be returned
-
----
-
-## Repository Structure
-
-- **/specs**: Organized specifications (features, api, database, ui)
-- **/frontend**: Next.js application
-- **/backend**: FastAPI application
-- **/specs_history**: Archived specification iterations
-- **README.md**: Setup and usage instructions
-- **CLAUDE.md**: Agentic workflow instructions
-- **Constitution**: This file must remain updated
-
----
-
-## Success Criteria
-
-The project is considered successful if:
-
-- All Phase I and Phase II features work as specified
-- Authentication and user isolation are correctly enforced
-- No manual code edits exist outside agentic workflows
-- All development phases are clearly traceable
-- The application runs successfully in documented environments
-- Codebases remain clean, readable, and maintainable
-
----
+- All listed features function correctly via CLI.
+- User can manage tasks end-to-end in one session.
+- No crashes on invalid input.
+- Code passes basic linting and logical review.
+- Generated code strictly follows the approved specs.
 
 ## Governance
 
 - **Supremacy**: This Constitution supersedes all other practices and ad-hoc decisions.
-- **Compliance**: All development activities must comply with this Constitution.
-- **Amendments**: Any amendment requires documentation and a clear migration path.
+- **Compliance**: All development activities, code reviews, and pull requests must verify compliance with the principles and standards outlined herein.
+- **Amendments**: Amendments require documentation, team approval, and a clear migration plan for existing artifacts.
 
----
-
-**Version**: 2.0.0  
-**Ratified**: TODO  
-**Last Amended**: 2025-12-25
+**Version**: 1.1.0 | **Ratified**: TODO(RATIFICATION_DATE) | **Last Amended**: 2026-01-02

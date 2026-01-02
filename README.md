@@ -1,102 +1,55 @@
-# Full-Stack Todo Application (Phase II)
+# Quickstart: Core Todo Application
 
-This repository contains the Phase II implementation of a Todo application, evolving from an in-memory console app to a secure, multi-user full-stack web application. It features persistent storage, user authentication, and a RESTful API, enabling users to manage their personal todo lists through a modern web interface.
-
-## Technology Stack
-
-*   **Frontend**: Next.js 16+ (App Router), TypeScript, Tailwind CSS
-*   **Backend**: Python FastAPI
-*   **Database**: Neon Serverless PostgreSQL
-*   **ORM**: SQLModel
-*   **Authentication**: Better Auth (JWT-based)
-*   **Development Workflow**: Spec-driven, agentic development with Spec-Kit Plus
-
----
-
-# Quickstart Guide: Full-Stack Todo App
-
-This guide provides instructions for quickly setting up and running the Full-Stack Todo Application locally.
+**Purpose**: This guide provides the basic steps to set up and run the Todo console application.
 
 ## Prerequisites
+- Python 3.13+
+- Windows Subsystem for Linux (WSL) 2 with Ubuntu 22.04 installed.
+- Git
 
-Before you begin, ensure you have the following installed:
+## Setup
 
-*   **Git**: For cloning the repository.
-*   **Python 3.11+**: For the FastAPI backend.
-*   **uv**: Python package manager. If not installed, you can install it via `pip install uv`.
-*   **Node.js 18+ & npm/yarn**: For the Next.js frontend.
-*   **Docker Desktop**: (Optional, but recommended for local PostgreSQL setup if not using Neon directly).
-*   **Neon Serverless PostgreSQL Account**: (Required for persistent storage).
+1.  **Clone the repository**:
+    ```bash
+    git clone <repository_url>
+    cd <repository_name>
+    ```
 
-## 1. Clone the Repository
+2.  **Create a virtual environment**:
+    It is recommended to use a virtual environment to manage project dependencies.
+    ```bash
+    python3 -m venv .venv
+    ```
 
-First, clone the project repository:
+3.  **Activate the virtual environment**:
+    ```bash
+    source .venv/bin/activate
+    ```
+    
+4.  **(Optional) Install dependencies**:
+    This project uses only the Python standard library, but if dependencies were required, you would install them here.
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+## Running the Application
+
+Once the setup is complete, you can run the application from the root of the project directory with the following command:
 
 ```bash
-git clone <repository_url>
-cd <repository_name>
+python3 -m src
 ```
 
-## 2. Backend Setup (FastAPI)
+This will start the application and display the main menu.
 
-1.  **Navigate to the backend directory**:
-    ```bash
-    cd backend
-    ```
-2.  **Create a Python virtual environment and install dependencies**:
-    ```bash
-    uv venv
-    uv pip install -r requirements.txt # (assuming requirements.txt will be generated)
-    # Alternatively, if pyproject.toml is used:
-    # uv pip install
-    ```
-3.  **Configure Environment Variables**:
-    Create a `.env` file in the `backend/` directory with your database connection string and JWT secret:
-    ```
-    DATABASE_URL="postgresql+psycopg://<user>:<password>@<host>/<database>"
-    JWT_SECRET_KEY="your_super_secret_jwt_key"
-    ALGORITHM="HS256" # Or other chosen algorithm for JWT
-    ACCESS_TOKEN_EXPIRE_MINUTES=30 # Example value
-    ```
-    *Replace `<user>`, `<password>`, `<host>`, and `<database>` with your Neon PostgreSQL credentials.*
-4.  **Run Database Migrations (if applicable)**:
-    (Details will be provided once SQLModel migration strategy is defined, e.g., using `alembic` or direct SQLModel synchronization).
-    ```bash
-    # Example:
-    # alembic upgrade head
-    ```
-5.  **Start the FastAPI backend server**:
-    ```bash
-    uvicorn main:app --reload --host 0.0.0.0 --port 8000
-    ```
-    The backend API will be available at `http://localhost:8000`.
+## Usage
 
-## 3. Frontend Setup (Next.js)
+The application is controlled through a simple command menu. When prompted, type one of the following commands and press Enter.
 
-1.  **Navigate to the frontend directory**:
-    ```bash
-    cd frontend
-    ```
-2.  **Install Node.js dependencies**:
-    ```bash
-    npm install # or yarn install
-    ```
-3.  **Configure Environment Variables**:
-    Create a `.env.local` file in the `frontend/` directory with the backend API URL:
-    ```
-    NEXT_PUBLIC_API_URL="http://localhost:8000/api"
-    ```
-4.  **Start the Next.js development server**:
-    ```bash
-    npm run dev # or yarn dev
-    ```
-    The frontend application will be available at `http://localhost:3000` (or another port if 3000 is in use).
-
-## 4. Using the Application
-
-1.  Open your web browser and navigate to `http://localhost:3000`.
-2.  Sign up for a new user account.
-3.  Sign in with your new credentials.
-4.  Start creating, viewing, updating, and deleting your todo items.
-    
-*Note: Ensure both the backend and frontend servers are running concurrently.*
+- **`add`**: Prompts you to enter a title and description for a new task.
+- **`view`**: Shows a list of all current tasks.
+- **`mark`**: Prompts you for a task ID to toggle its status (complete/incomplete).
+- **`update`**: Prompts you for a task ID to update its title or description.
+- **`delete`**: Prompts you for a task ID to delete a task.
+- **`help`**: Displays the command menu again.
+- **`exit`**: Closes the application.
